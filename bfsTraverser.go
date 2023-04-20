@@ -8,15 +8,15 @@ import (
 type BfsTraverser struct {
 	client       httpClient
 	visitedLinks map[string]bool
-	queue        []string
+	queue        Queue
 }
 
 func (b *BfsTraverser) traverse(path string) {
-	b.queue = append(b.queue, path)
+	b.queue.Enqueue(path)
 
-	for len(b.queue) > 0 {
-		link := b.queue[0]
-		b.queue = b.queue[1:]
+	for b.queue.Size() > 0 {
+		link := b.queue.ExitValue()
+		b.queue.Dequeue()
 		fmt.Println(link)
 
 		respBody, err := b.client.GetResponseBody(link)
@@ -28,7 +28,7 @@ func (b *BfsTraverser) traverse(path string) {
 		for _, l := range links {
 			if !b.visitedLinks[l] {
 				b.visitedLinks[l] = true
-				b.queue = append(b.queue, l)
+				b.queue.Enqueue(l)
 			}
 		}
 	}
@@ -38,6 +38,6 @@ func NewBfsTraverser(c httpClient) *BfsTraverser {
 	return &BfsTraverser{
 		client:       c,
 		visitedLinks: make(map[string]bool),
-		queue:        make([]string, 0),
+		queue:        NewQueue(),
 	}
 }

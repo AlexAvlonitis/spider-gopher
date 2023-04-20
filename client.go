@@ -27,6 +27,6 @@ func (d DefaultHttpClient) GetResponseBody(path string) ([]byte, error) {
 	return respBody, nil
 }
 
-func NewHttpClient() DefaultHttpClient {
-	return DefaultHttpClient{&http.Client{}}
+func NewHttpClient() *DefaultHttpClient {
+	return &DefaultHttpClient{&http.Client{}}
 }
