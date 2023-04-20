@@ -1,4 +1,4 @@
-package main
+package dts
 
 // Simple Queue implementation
 type Queue interface {

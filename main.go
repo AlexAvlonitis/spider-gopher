@@ -1,8 +1,13 @@
 package main
 
-func main() {
-	c := NewHttpClient()
-	bst := NewBfsTraverser(c)
+import (
+	"main/http"
+	"main/traverser"
+)
 
-	bst.traverse("https://alex.avlonitis.me")
+func main() {
+	c := http.NewClient()
+	bfs := traverser.New(c)
+
+	bfs.Traverse("https://alex.avlonitis.me")
 }

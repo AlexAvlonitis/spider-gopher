@@ -1,17 +1,20 @@
-package main
+package traverser
 
 import (
 	"fmt"
 	"log"
+	"main/dts"
+	"main/http"
+	"main/parser"
 )
 
-type BfsTraverser struct {
-	client       httpClient
+type Bfs struct {
+	client       http.Client
 	visitedLinks map[string]bool
-	queue        Queue
+	queue        dts.Queue
 }
 
-func (b *BfsTraverser) traverse(path string) {
+func (b *Bfs) Traverse(path string) {
 	b.queue.Enqueue(path)
 
 	for b.queue.Size() > 0 {
@@ -24,7 +27,7 @@ func (b *BfsTraverser) traverse(path string) {
 			log.Fatal(err)
 		}
 
-		links := ExtractAllLinks(respBody)
+		links := parser.ExtractAllLinks(respBody)
 		for _, l := range links {
 			if !b.visitedLinks[l] {
 				b.visitedLinks[l] = true
@@ -34,10 +37,10 @@ func (b *BfsTraverser) traverse(path string) {
 	}
 }
 
-func NewBfsTraverser(c httpClient) *BfsTraverser {
-	return &BfsTraverser{
+func New(c http.Client) *Bfs {
+	return &Bfs{
 		client:       c,
 		visitedLinks: make(map[string]bool),
-		queue:        NewQueue(),
+		queue:        dts.NewQueue(),
 	}
 }
