@@ -9,5 +9,5 @@ func main() {
 	c := http.NewClient()
 	bfs := traverser.New(c)
 
-	bfs.Traverse("https://alex.avlonitis.me")
+	bfs.Traverse("https://letsencrypt.org/")
 }

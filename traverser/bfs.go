@@ -18,7 +18,7 @@ func (b *Bfs) Traverse(path string) {
 	b.queue.Enqueue(path)
 
 	for b.queue.Size() > 0 {
-		link := b.queue.ExitValue()
+		link := b.queue.NextValue()
 		b.queue.Dequeue()
 		fmt.Println(link)
 
@@ -27,7 +27,7 @@ func (b *Bfs) Traverse(path string) {
 			log.Fatal(err)
 		}
 
-		links := parser.ExtractAllLinks(respBody)
+		links := parser.ExtractAllDomainLinks(path, respBody)
 		for _, l := range links {
 			if !b.visitedLinks[l] {
 				b.visitedLinks[l] = true

@@ -4,7 +4,7 @@ package dts
 type Queue interface {
 	Enqueue(string)
 	Dequeue() []string
-	ExitValue() string
+	NextValue() string
 	Size() int
 }
 
@@ -25,7 +25,7 @@ func (d *DefaultQueue) Size() int {
 	return len(d.queue)
 }
 
-func (d *DefaultQueue) ExitValue() string {
+func (d *DefaultQueue) NextValue() string {
 	return d.queue[0]
 }
 
