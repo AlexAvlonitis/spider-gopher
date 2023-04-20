@@ -8,7 +8,7 @@ import (
 
 // Input a stream of bytes from a parsed HTML document,
 // and returns a list of strings containing all the hyperlink URLs
-func ParseLinks(b []byte) []string {
+func ExtractAllLinks(b []byte) []string {
 	tkn := html.NewTokenizer(bytes.NewReader(b))
 
 	var links []string
@@ -30,6 +30,4 @@ func ParseLinks(b []byte) []string {
 			}
 		}
 	}
-
-	return links
 }

@@ -5,12 +5,12 @@ import (
 	"net/http"
 )
 
-type DefaultHttpClient struct {
-	client *http.Client
+type httpClient interface {
+	GetResponseBody(string) ([]byte, error)
 }
 
-func NewHttpClient() DefaultHttpClient {
-	return DefaultHttpClient{&http.Client{}}
+type DefaultHttpClient struct {
+	client *http.Client
 }
 
 func (d DefaultHttpClient) GetResponseBody(path string) ([]byte, error) {
@@ -25,4 +25,8 @@ func (d DefaultHttpClient) GetResponseBody(path string) ([]byte, error) {
 	}
 
 	return respBody, nil
+}
+
+func NewHttpClient() DefaultHttpClient {
+	return DefaultHttpClient{&http.Client{}}
 }
