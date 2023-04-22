@@ -9,13 +9,14 @@ import (
 )
 
 type Bfs struct {
-	client       http.Client
-	visitedLinks map[string]bool
-	queue        dts.Queue
+	client http.Client
+	set    dts.Set
+	queue  dts.Queue
 }
 
 func (b *Bfs) Traverse(path string) {
 	b.queue.Enqueue(path)
+	b.set.Add(path)
 
 	for b.queue.Size() > 0 {
 		link := b.queue.NextValue()
@@ -29,18 +30,18 @@ func (b *Bfs) Traverse(path string) {
 
 		links := parser.ExtractAllDomainLinks(path, respBody)
 		for _, l := range links {
-			if !b.visitedLinks[l] {
-				b.visitedLinks[l] = true
+			if !b.set.Exists(l) {
+				b.set.Add(l)
 				b.queue.Enqueue(l)
 			}
 		}
 	}
 }
 
-func New(c http.Client) *Bfs {
+func New(c http.Client) Traverser {
 	return &Bfs{
-		client:       c,
-		visitedLinks: make(map[string]bool),
-		queue:        dts.NewQueue(),
+		client: c,
+		set:    dts.NewSet(),
+		queue:  dts.NewQueue(),
 	}
 }
