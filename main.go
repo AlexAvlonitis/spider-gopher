@@ -1,13 +1,13 @@
 package main
 
 import (
+	"main/dts"
 	"main/http"
-	"main/traverser"
 )
 
 func main() {
 	c := http.NewClient()
-	bfs := traverser.New(c)
+	bfs := dts.NewBfs(c)
 
 	bfs.Traverse("https://alex.avlonitis.me")
 }

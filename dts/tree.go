@@ -1,19 +1,25 @@
-package traverser
+package dts
 
 import (
 	"fmt"
 	"log"
-	"main/dts"
 	"main/http"
 	"main/parser"
 )
 
-type Bfs struct {
-	client http.Client
-	set    dts.Set
-	queue  dts.Queue
+type Tree interface {
+	Traverse(string)
 }
 
+// Simple BreadthFirst parser implementation
+type Bfs struct {
+	client http.Client
+	set    Set
+	queue  Queue
+}
+
+// Traverses all the links of a website in a breadth-first manner.
+// Logs the already visited links to avoid circular requests.// Parse
 func (b *Bfs) Traverse(path string) {
 	b.queue.Enqueue(path)
 	b.set.Add(path)
@@ -38,10 +44,10 @@ func (b *Bfs) Traverse(path string) {
 	}
 }
 
-func New(c http.Client) Traverser {
+func NewBfs(c http.Client) Tree {
 	return &Bfs{
 		client: c,
-		set:    dts.NewSet(),
-		queue:  dts.NewQueue(),
+		set:    NewSet(),
+		queue:  NewQueue(),
 	}
 }
