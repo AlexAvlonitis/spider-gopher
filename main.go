@@ -1,13 +1,13 @@
 package main
 
 import (
-	"main/dts"
 	"main/http"
+	"main/parser"
 )
 
 func main() {
 	c := http.NewClient()
-	bfs := dts.NewBfs(c)
+	crawler := parser.NewCrawler(c)
 
-	bfs.Traverse("https://alex.avlonitis.me")
+	crawler.Crawl("https://zerossl.com/")
 }

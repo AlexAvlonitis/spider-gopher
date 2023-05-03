@@ -29,8 +29,8 @@ func ExtractAllDomainLinks(mainPath string, b []byte) []string {
 	}
 }
 
-// Returns the href attribute url. If the href attribute is not an absolute path
-// it appends the full path.
+// Returns the href attribute url.
+// If the href attribute is not an absolute path it appends the full path.
 func getHrefAttrs(mainPath string, attrs []html.Attribute) []string {
 	var links []string
 
@@ -44,7 +44,7 @@ func getHrefAttrs(mainPath string, attrs []html.Attribute) []string {
 	return links
 }
 
-// Compares two string URLs if they are on the same website.
+// Compares two string URLs if they are on the same website/domain.
 // Returns true if they have the same domain or a relative path
 func isSameWebsite(m, u string) bool {
 	mainPath, err := url.Parse(m)
@@ -63,7 +63,7 @@ func isSameWebsite(m, u string) bool {
 }
 
 // Appends the scheme and host name of the main url to the link,
-// if the url is already not absolute
+// if the url is not absolute already.
 func appendHost(mainPath, link string) string {
 	m, err := url.Parse(mainPath)
 	if err != nil {

@@ -5,6 +5,7 @@ type Queue interface {
 	Enqueue(string)
 	Dequeue() []string
 	NextValue() string
+	IsNotEmpty() bool
 	Size() int
 }
 
@@ -19,6 +20,10 @@ func (d *DefaultQueue) Enqueue(s string) {
 func (d *DefaultQueue) Dequeue() []string {
 	d.queue = d.queue[1:]
 	return d.queue
+}
+
+func (d *DefaultQueue) IsNotEmpty() bool {
+	return d.Size() > 0
 }
 
 func (d *DefaultQueue) Size() int {
