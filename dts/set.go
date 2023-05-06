@@ -7,17 +7,19 @@ type Set interface {
 }
 
 type DefaultSet struct {
-	set map[string]bool
+	set map[string]struct{}
 }
 
 func (d *DefaultSet) Add(s string) {
-	d.set[s] = true
+	d.set[s] = struct{}{}
 }
 
 func (d *DefaultSet) Exists(s string) bool {
-	return d.set[s]
+	_, ok := d.set[s]
+
+	return ok
 }
 
 func NewSet() Set {
-	return &DefaultSet{set: make(map[string]bool)}
+	return &DefaultSet{make(map[string]struct{})}
 }

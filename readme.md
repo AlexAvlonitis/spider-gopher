@@ -1,6 +1,6 @@
 # Spider Gopher
 
-Pracising Go, simple web crawler, prints all the links (stdout) of a given URL(constant)
+Pracising Go, simple concurrent web crawler, prints all the links (stdout) of a given URL (fixed)
 
 ### Run
 ```
@@ -8,4 +8,4 @@ go run .
 ```
 
 ### ToDo
-- [ ] Add concurrency
+- [x] Add concurrency

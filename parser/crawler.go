@@ -5,6 +5,7 @@ import (
 	"log"
 	"main/dts"
 	"main/http"
+	"sync"
 )
 
 type Crawler struct {
@@ -14,29 +15,42 @@ type Crawler struct {
 }
 
 // Traverses all the links of a website in a breadth-first iterative manner.
-// Logs the already visited links to avoid circular requests.
-func (b *Crawler) Crawl(path string) {
-	b.links.Enqueue(path)
-	b.visitedLinks.Add(path)
+// Uses wait groups for concurrency, batches based on the number of links per page
+func (c *Crawler) Crawl(path string) {
+	c.links.Enqueue(path)
+	c.visitedLinks.Add(path)
 
-	for b.links.IsNotEmpty() {
-		link := b.links.NextValue()
-		b.links.Dequeue()
-		fmt.Println(link)
+	for c.links.IsNotEmpty() {
+		lks := c.links.DequeueAll()
+		var wg sync.WaitGroup
+		var mu sync.Mutex
 
-		respBody, err := b.httpClient.GetResponseBody(link)
-		if err != nil {
-			log.Fatal(err)
+		for _, l := range lks {
+			wg.Add(1)
+			go c.fetchLinks(l, &wg, &mu)
 		}
-
-		links := ExtractAllDomainLinks(path, respBody)
-		for _, l := range links {
-			if !b.visitedLinks.Exists(l) {
-				b.visitedLinks.Add(l)
-				b.links.Enqueue(l)
-			}
-		}
+		wg.Wait()
 	}
+}
+
+// GET request for the given link, mutex locking the concurrent read/writes.
+func (c *Crawler) fetchLinks(link string, wg *sync.WaitGroup, m *sync.Mutex) {
+	l, err := c.httpClient.GetResponse(link)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(l.Path) // Print the path to stdout, TODO: refactor to a printer function
+
+	links := ExtractAllDomainLinks(l.Path, l.HtmlBody)
+	for _, l := range links {
+		m.Lock()
+		if !c.visitedLinks.Exists(l) {
+			c.visitedLinks.Add(l)
+			c.links.Enqueue(l)
+		}
+		m.Unlock()
+	}
+	wg.Done()
 }
 
 func NewCrawler(c http.Client) *Crawler {

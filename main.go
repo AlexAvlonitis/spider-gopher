@@ -9,5 +9,5 @@ func main() {
 	c := http.NewClient()
 	crawler := parser.NewCrawler(c)
 
-	crawler.Crawl("https://zerossl.com/")
+	crawler.Crawl("https://golangbot.com")
 }

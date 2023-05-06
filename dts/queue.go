@@ -3,8 +3,7 @@ package dts
 // Simple Queue implementation
 type Queue interface {
 	Enqueue(string)
-	Dequeue() []string
-	NextValue() string
+	DequeueAll() []string
 	IsNotEmpty() bool
 	Size() int
 }
@@ -17,9 +16,11 @@ func (d *DefaultQueue) Enqueue(s string) {
 	d.queue = append(d.queue, s)
 }
 
-func (d *DefaultQueue) Dequeue() []string {
-	d.queue = d.queue[1:]
-	return d.queue
+func (d *DefaultQueue) DequeueAll() []string {
+	q := d.queue
+	d.queue = []string{}
+
+	return q
 }
 
 func (d *DefaultQueue) IsNotEmpty() bool {
@@ -28,10 +29,6 @@ func (d *DefaultQueue) IsNotEmpty() bool {
 
 func (d *DefaultQueue) Size() int {
 	return len(d.queue)
-}
-
-func (d *DefaultQueue) NextValue() string {
-	return d.queue[0]
 }
 
 func NewQueue() Queue {
