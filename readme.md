@@ -7,5 +7,10 @@ Simple concurrent web crawler, prints all the links (stdout) of a given URL (fix
 go run .
 ```
 
+### Tests
+```
+go test -v ./...
+```
+
 ### ToDo
 - [x] Add concurrency

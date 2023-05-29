@@ -9,24 +9,24 @@ type DefaultClient struct {
 	client *http.Client
 }
 
-type Link struct {
+type ResponseUrl struct {
 	Path     string
 	HtmlBody []byte
 }
 
-// HTTP Get request, returns the parsed html response as a Link object
-func (d *DefaultClient) GetResponse(path string) (Link, error) {
+// HTTP Get request, returns the parsed html response as a ResponseUrl object
+func (d *DefaultClient) GetResponse(path string) (ResponseUrl, error) {
 	resp, err := d.client.Get(path)
 	if err != nil {
-		return Link{}, err
+		return ResponseUrl{}, err
 	}
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return Link{}, err
+		return ResponseUrl{}, err
 	}
 
-	l := Link{Path: path, HtmlBody: respBody}
+	l := ResponseUrl{Path: path, HtmlBody: respBody}
 	return l, nil
 }
 

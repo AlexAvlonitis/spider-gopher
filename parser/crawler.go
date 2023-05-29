@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"log"
 	"main/dts"
 	"main/http"
@@ -12,6 +11,7 @@ type Crawler struct {
 	httpClient   http.Client
 	links        dts.Queue
 	visitedLinks dts.Set
+	Results      []string
 }
 
 // Traverses all the links of a website in a breadth-first iterative manner.
@@ -35,13 +35,13 @@ func (c *Crawler) Crawl(path string) {
 
 // GET request for the given link, mutex locking the concurrent read/writes.
 func (c *Crawler) fetchLinks(link string, wg *sync.WaitGroup, m *sync.Mutex) {
-	l, err := c.httpClient.GetResponse(link)
+	r, err := c.httpClient.GetResponse(link)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(l.Path) // Print the path to stdout, TODO: refactor to a printer function
+	c.Results = append(c.Results, r.Path)
 
-	links := ExtractAllDomainLinks(l.Path, l.HtmlBody)
+	links := ExtractAllDomainLinks(r.Path, r.HtmlBody)
 	for _, l := range links {
 		m.Lock()
 		if !c.visitedLinks.Exists(l) {
